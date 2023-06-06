@@ -33,6 +33,8 @@ class App:
             '15': self.option_15, '16': self.option_16,
             '17': self.option_17, '18': self.option_18,
             '19': self.option_19, '20': self.option_20,
+            '21': self.option_21, '22': self.option_22,
+            '23': self.option_23, '24': self.option_24,
             'X': self.option_exit
         }
 
@@ -73,7 +75,7 @@ class App:
                 attr_name: Stat attribute name
                 sort_attr: Attribute used to sort the results
         '''
-        greater_than = request_int(f'{message}:\n', 'Por favor, ingrese un número válido')
+        greater_than = request_int(f'{message}\n', 'Por favor, ingrese un número válido')
         players = self.helper.get_playeres_with_greater_stat_attr_than_value(attr_name, greater_than)
         if players:
             print(f'Jugadores con {attr_name.replace("_", " ")} mayor a {greater_than}:\n')
@@ -170,6 +172,29 @@ class App:
             print(f'{p}, puntos: {v[0]}, rebotes: {v[1]}, asistencias: {v[2]}, robos: {v[3]}')
         
         self.helper.save_ranking_to_csv(ranking, '23_bonus_ranking')
+    
+    def option_21(self):
+        grouped_by_position = self.helper.get_grouped_quantity_of_players_by_key('position')
+        r = '\n'.join([f'{p}: {grouped_by_position[p]}' for p in grouped_by_position])
+        print(r)
+    
+    def option_22(self):
+        all_star_players = self.helper.get_all_star_players()
+        r = [f'{dict(p)["name"]} ({dict(p)["quantity"]} veces All-Star)' for p in all_star_players]
+        print('\n'.join(r))
+    
+    def option_23(self):
+        r = []
+        for best in self.helper.get_best_stats_players():
+            best = dict(best)
+            r.append(
+                f'Mayor cantidad de {best["text"]}: {best["name"]} ({best["stat"]})'
+            )
+        print('\n'.join(r))
+
+    def option_24(self):
+        best_player = self.helper.get_best_player()
+        print(f'El jugador con el mayor de todas sus estadisticas sumadas es: {best_player.name}')
 
     def option_exit(self):
         print('Cyaaa 👋')
