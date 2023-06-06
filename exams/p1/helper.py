@@ -1,6 +1,7 @@
 import os
 from player.PlayerAdapter import adapt_players
 from player.Player import Player
+from player.PlayerStats import PlayerStats
 from utilities.files.json import json_utils
 from utilities.files.csv import csv_utils
 
@@ -12,6 +13,7 @@ class Helper:
     __JSON_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './_data'))
     __CSV_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './_tmp'))
     __HALL_FAME_MEMBER_ARCHIVEMENT = 'Miembro del Salon de la Fama del Baloncesto'
+    __ALL_STAR_ARCHIVEMENT = 'All-Star'
 
     players: list
 
@@ -130,3 +132,65 @@ class Helper:
         csv_head = ['player', 'points', 'rebounds', 'assist', 'steals']
         csv_body = [[p] + list(ranking[p].values()) for p in ranking]
         csv_utils.save_csv(self.__CSV_PATH, file_name, [csv_head] + csv_body)
+
+    def __get_grouped_players_by_key(self, key): 
+        grouped_players = {}
+        
+        # FIXME: Código medio repetido con get_ranking
+        for player in self.players:
+            if getattr(player, key) in grouped_players.keys():
+                grouped_players[getattr(player, key)].append(player)
+            else:
+                grouped_players[getattr(player, key)] = []
+                grouped_players[getattr(player, key)].append(player)
+
+        return grouped_players
+
+    def get_grouped_quantity_of_players_by_key(self, key):
+        grouped_players = self.__get_grouped_players_by_key(key)
+        return {k: len(grouped_players[k]) for k in grouped_players}
+
+    def get_all_star_players(self):
+        all_star_players = []
+
+        # TODO: Hacelo en modo Python
+        for player in self.players:
+            for archivement in player.archivements:
+                # FIXME: Esto con expresiones regulares estaría mejor
+                if self.__ALL_STAR_ARCHIVEMENT in archivement:
+                    all_star_players.append({
+                        "name": player.name,
+                        "quantity": int(archivement.split(' ')[0])
+                    })
+                    break
+        
+        return sorted(all_star_players, key=lambda p : p['quantity'], reverse=True)
+    
+    def get_best_stats_players(self):
+
+        def __build_best_by_stat(stat_attr):
+            player = self.get_player_with_max_stat_attr(stat_attr)
+            return {
+                "name": player.name,
+                "stat": getattr(player.statistics, stat_attr),
+                "text": stat_attr.replace("_", " ").capitalize()
+            }
+        
+        return [
+            __build_best_by_stat('seasons'),
+            __build_best_by_stat('total_points'),
+            __build_best_by_stat('average_points_per_game'),
+            __build_best_by_stat('total_rebounds'),
+            __build_best_by_stat('average_rebounds_per_game'),
+            __build_best_by_stat('total_assists'),
+            __build_best_by_stat('average_assists_per_game'),
+            __build_best_by_stat('total_steals'),
+            __build_best_by_stat('total_blocks'),
+            __build_best_by_stat('field_goal_percentage'),
+            __build_best_by_stat('free_throw_percentage'),
+            __build_best_by_stat('three_point_percentage'),
+        ]
+    
+
+    def get_best_player(self) -> Player:
+        return max(self.players, key=lambda p : sum(vars(p.statistics).values()))
