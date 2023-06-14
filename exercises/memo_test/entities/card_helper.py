@@ -32,14 +32,6 @@ def draw_card(screen, card: Card, x, y) -> Card:
 
     card.set_surface(card_width, card_height, card_x_pos, card_y_pos)
 
-    # FIXME: Extract function
-    font = pygame.font.Font(None, 36)
-    text_surface = font.render(str(card.number), True, colors.WHITE)
-    text_rect = text_surface.get_rect()
-    text_rect.center = (card_width // 2, card_height // 2)
-
-    card.surface.blit(text_surface, text_rect)
-
     card.draw(screen)
 
 
@@ -47,5 +39,5 @@ def on_click_card_collider(screen, cards: list[Card]):
     mouse_pos = pygame.mouse.get_pos()
     for card in cards:
         if card.rect.collidepoint(mouse_pos):
-            print(f'Card {card.number} clicked!')
+            print(f'Flipping card {card.number} clicked!')
             card.flip(screen)
