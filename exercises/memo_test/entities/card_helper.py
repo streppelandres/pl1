@@ -24,23 +24,28 @@ def init_cards() -> list:
     return cards
 
 
-def draw_card(screen, card:Card, x, y) -> Card:
+def draw_card(screen, card: Card, x, y) -> Card:
     card_width = video_cfg.WIDTH // (gameplay_cfg.NUMBER_OF_CARDS)
     card_height = video_cfg.HEIGHT // (gameplay_cfg.NUMBER_OF_CARDS // 1.5)
     card_x_pos = x * card_width
     card_y_pos = y * card_height
 
-    # saving rect for collitions
-    card.rect = pygame.draw.rect(screen, card.color, (card_x_pos, card_y_pos, card_width, card_height))
-    pygame.draw.rect(screen, colors.WHITE, (card_x_pos, card_y_pos, card_width, card_height), 3)
+    card.set_surface(card_width, card_height, card_x_pos, card_y_pos)
 
-    text = pygame.font.Font(None, 48).render(str(card.number), True, colors.WHITE)
-    text_rect = text.get_rect(center=(card_x_pos + 50, card_y_pos + 60)) # FIXME: More dynamic
+    # FIXME: Extract function
+    font = pygame.font.Font(None, 36)
+    text_surface = font.render(str(card.number), True, colors.WHITE)
+    text_rect = text_surface.get_rect()
+    text_rect.center = (card_width // 2, card_height // 2)
 
-    screen.blit(text, text_rect)
+    card.surface.blit(text_surface, text_rect)
 
-def on_click_card_collider(cards:list):
+    card.draw(screen)
+
+
+def on_click_card_collider(screen, cards: list[Card]):
     mouse_pos = pygame.mouse.get_pos()
     for card in cards:
         if card.rect.collidepoint(mouse_pos):
             print(f'Card {card.number} clicked!')
+            card.flip(screen)

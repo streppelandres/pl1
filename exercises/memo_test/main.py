@@ -29,7 +29,7 @@ while is_running:
             print('cya 👋')
             is_running = False
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            card_helper.on_click_card_collider(cards)
+            card_helper.on_click_card_collider(screen, cards)
 
     # game code here
 
