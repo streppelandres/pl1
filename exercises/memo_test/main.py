@@ -1,7 +1,6 @@
-import random
 import pygame
 from config import game_cfg, video_cfg, gameplay_cfg
-from utils import colors
+from entities import card_helper, board_helper
 
 pygame.init()
 pygame.display.set_caption(game_cfg.TITLE)
@@ -10,40 +9,17 @@ clock = pygame.time.Clock()
 delta_time = 0
 is_running = True
 
+# -------------------------------------------
+
+
+# -------------------------------------------
+
+
 # ------- INIT CARDS
-cards = []
-for _ in range(0, gameplay_cfg.NUMBER_OF_CARDS):
-    while True:
-        card = colors.get_random_color()
-        if not card in cards:
-            cards.append(card)
-            break
+cards = card_helper.init_cards()
+[print('[' + card.__str__() + ']') for card in cards]
 
-cards = cards + cards # cards duplication
-random.shuffle(cards)
-
-#print(cards)
-
-# ------- INIT BOARD
-rows = int(len(cards) ** 0.5)
-columns = len(cards) // rows
-
-card_width = video_cfg.WIDTH // (gameplay_cfg.NUMBER_OF_CARDS)
-card_height = video_cfg.HEIGHT // (gameplay_cfg.NUMBER_OF_CARDS // 1.5)
-
-print(f'card_width -> {card_width}, card_height -> {card_height}')
-
-board = []
-index = 0
-for i in range(rows):
-    row = []
-    for j in range(columns):
-        row.append(cards[index])
-        pygame.draw.rect(screen, cards[index], (i * card_width, j * card_height, card_width, card_height))
-        index += 1
-    board.append(row)
-
-#print(board)
+board = board_helper.init_board(screen, cards)
 
 # -------------------------------------------
 
@@ -52,6 +28,8 @@ while is_running:
         if event.type == pygame.QUIT:
             print('cya 👋')
             is_running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            card_helper.on_click_card_collider(cards)
 
     # game code here
 
