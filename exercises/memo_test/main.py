@@ -9,19 +9,8 @@ clock = pygame.time.Clock()
 delta_time = 0
 is_running = True
 
-# -------------------------------------------
-
-
-# -------------------------------------------
-
-
-# ------- INIT CARDS
-cards = card_helper.init_cards()
-[print('[' + card.__str__() + ']') for card in cards]
-
-board = board_helper.init_board(screen, cards)
-
-# -------------------------------------------
+cards = card_helper.create_cards()
+board = board_helper.create_board_with_cards(screen, cards)
 
 while is_running:
     for event in pygame.event.get():

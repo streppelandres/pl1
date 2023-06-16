@@ -1,21 +1,21 @@
-from entities import card_helper
+from entities.card import Card
 
 
-def init_board(screen, cards: list) -> any:
+def create_board_with_cards(screen, cards: list[Card]) -> list:
     rows = int(len(cards) ** 0.5)
     columns = len(cards) // rows
-    print(f'[create_board] rows: {rows}, columns: {columns}')
 
-    board = []
-    index = 0
+    board, index = [], 0
     for i in range(rows):
         row = []
-        
         for j in range(columns):
-            row.append(cards[index])
-            card_helper.draw_card(screen, cards[index], i, j)
+            card: Card = cards[index]
+            card.set_position(i * card.surface.get_width(),
+                              j * card.surface.get_height())
+            card.face_toogle(screen, False)
+            card.draw(screen)
+            row.append(card)
             index += 1
-        
         board.append(row)
 
     return board

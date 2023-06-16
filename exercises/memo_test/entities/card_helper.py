@@ -5,34 +5,26 @@ from utils import colors
 from entities.card import Card
 
 
-def init_cards() -> list:
+def create_cards() -> list[Card]:
+    card_width = video_cfg.WIDTH // (gameplay_cfg.NUMBER_OF_CARDS // 2)
+    card_height = video_cfg.HEIGHT // (gameplay_cfg.NUMBER_OF_CARDS // 2)
     cards = []
-    cards_copy = []
+    duplicated_cards = []
 
     for i in range(0, gameplay_cfg.NUMBER_OF_CARDS):
         while True:
-            card = Card(number=i+1, color=colors.get_random_color())
+            color = colors.get_random_color()
+            card = Card(i+1, color, card_width, card_height)
             if not card in cards:
                 cards.append(card)
                 # FIXME: copy created, otherwise use the same reference
-                cards_copy.append(Card(number=i+1, color=card.color))
+                duplicated_cards.append(Card(i+1, color, card_width, card_height))
                 break
 
-    cards = cards + cards_copy  # cards duplication
+    cards = cards + duplicated_cards
     random.shuffle(cards)
 
     return cards
-
-
-def draw_card(screen, card: Card, x, y) -> Card:
-    card_width = video_cfg.WIDTH // (gameplay_cfg.NUMBER_OF_CARDS)
-    card_height = video_cfg.HEIGHT // (gameplay_cfg.NUMBER_OF_CARDS // 1.5)
-    card_x_pos = x * card_width
-    card_y_pos = y * card_height
-
-    card.set_surface(card_width, card_height, card_x_pos, card_y_pos)
-
-    card.draw(screen)
 
 
 def on_click_card_collider(screen, cards: list[Card]):
@@ -40,4 +32,4 @@ def on_click_card_collider(screen, cards: list[Card]):
     for card in cards:
         if card.rect.collidepoint(mouse_pos):
             print(f'Flipping card {card.number} clicked!')
-            card.flip(screen)
+            card.face_toogle(screen, True)
