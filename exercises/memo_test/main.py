@@ -16,14 +16,16 @@ cards = card_helper.create_cards()
 board = board_helper.create_board_with_cards(screen, cards)
 
 while is_running:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print('cya 👋')
             is_running = False
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             card_helper.on_click_card_collider(screen, cards, game)
-
-    # game code here
+        elif event.type == game.SET_FACE_DOWN_CARDS_EVENT:
+            [card.face_toogle(screen, False) for card in event.cards]
+            pygame.time.set_timer(game.SET_FACE_DOWN_CARDS_EVENT, 0)
 
     pygame.display.flip()
     delta_time = clock.tick(video_cfg.FPS) / 1000

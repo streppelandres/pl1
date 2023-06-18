@@ -52,14 +52,15 @@ def on_click_card_collider(screen, cards: list[Card], game: Game):
                 return
 
             last_card = get_card_by_id(cards, game.last_card_id)
+            
             if last_card.number == card.number:
                 print('Good! Same cards clicked, they are inactive')
                 last_card.set_inactive(screen)
                 card.set_inactive(screen)
             else:
                 print('Bad! The cards are differents')
-                card.face_toogle(screen, False)
-                last_card.face_toogle(screen, False)
+                # FIXME: Find a better solution for these cards param
+                pygame.time.set_timer(pygame.event.Event(game.SET_FACE_DOWN_CARDS_EVENT, cards=[card, last_card]), 3000)
             
             game.last_card_id = None
 
