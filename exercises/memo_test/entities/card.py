@@ -12,6 +12,7 @@ class Card(pygame.sprite.Sprite):
         self.surface = pygame.Surface([width, height])
         self.surface.fill(gameplay_cfg.FLIPPED_CARD_COLOR)
         self.rect = self.surface.get_rect()
+        self.disabled = False
 
     def set_position(self, x: float, y: float):
         self.rect.x = x
@@ -20,22 +21,15 @@ class Card(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.surface, self.rect)
 
-    def face_toogle(self, screen, toggle=True):
-        if toggle:
-            self.__face_up(screen)
-        else:
-            self.__face_down(screen)
-
-    def __face_up(self, screen):
-        self.surface.fill(self.color)
-        self.flipped = True
-        self.__draw_txt(str(self.number))
+    def set_inactive(self, screen):
+        self.disabled = True
+        self.surface.fill(gameplay_cfg.COMPLETE_CARD_COLOR)
         self.draw(screen)
 
-    def __face_down(self, screen):
-        self.surface.fill(gameplay_cfg.FLIPPED_CARD_COLOR)
-        self.flipped = False
-        self.__draw_txt(gameplay_cfg.FLIPPED_CARD_TXT)
+    def face_toogle(self, screen, toggle=True):
+        self.surface.fill(toggle and self.color or gameplay_cfg.FLIPPED_CARD_COLOR)
+        self.flipped = toggle
+        self.__draw_txt(toggle and str(self.number) or gameplay_cfg.FLIPPED_CARD_TXT)
         self.draw(screen)
 
     def __draw_txt(self, txt: str):

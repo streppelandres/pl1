@@ -3,6 +3,7 @@ import random
 from config import gameplay_cfg, video_cfg
 from utils import colors
 from entities.card import Card
+from entities.game import Game
 
 
 def create_cards() -> list[Card]:
@@ -18,7 +19,8 @@ def create_cards() -> list[Card]:
             if not card in cards:
                 cards.append(card)
                 # FIXME: copy created, otherwise use the same reference
-                duplicated_cards.append(Card(i+1, color, card_width, card_height))
+                duplicated_cards.append(
+                    Card(i+1, color, card_width, card_height))
                 break
 
     cards = cards + duplicated_cards
@@ -26,10 +28,41 @@ def create_cards() -> list[Card]:
 
     return cards
 
-
-def on_click_card_collider(screen, cards: list[Card]):
+#TODO:
+# - Verify when the same card is clicked
+# - FIXME: Show the second card clicked
+# - Discount one attempt in failed case
+# - Win the game when is no more card to be clicked
+# - Lose the game when is no more attempts
+def on_click_card_collider(screen, cards: list[Card], game: Game):
     mouse_pos = pygame.mouse.get_pos()
     for card in cards:
-        if card.rect.collidepoint(mouse_pos):
-            print(f'Flipping card {card.number} clicked!')
+        if card.rect.collidepoint(mouse_pos): #and not card.disabled:
+            print(f'Card {card.number} clicked!')
+
+            if card.disabled:
+                print('The clicked card is disabled')
+                return
+
             card.face_toogle(screen, True)
+
+            if not game.last_card_id:
+                print('There is not last saved card')
+                game.last_card_id = id(card)
+                return
+
+            last_card = get_card_by_id(cards, game.last_card_id)
+            if last_card.number == card.number:
+                print('Good! Same cards clicked, they are inactive')
+                last_card.set_inactive(screen)
+                card.set_inactive(screen)
+            else:
+                print('Bad! The cards are differents')
+                card.face_toogle(screen, False)
+                last_card.face_toogle(screen, False)
+            
+            game.last_card_id = None
+
+
+def get_card_by_id(cards:list[Card], card_id:int):
+    return [card for card in cards if id(card) == card_id][0]
