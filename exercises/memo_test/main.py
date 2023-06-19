@@ -21,12 +21,15 @@ while is_running:
         if event.type == pygame.QUIT:
             print('cya 👋')
             is_running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and game.enable_card_click:
             card_helper.on_click_card_collider(screen, cards, game)
         elif event.type == game.SET_FACE_DOWN_CARDS_EVENT:
             [card.face_toogle(screen, False) for card in event.cards]
             pygame.time.set_timer(game.SET_FACE_DOWN_CARDS_EVENT, 0)
+            game.enable_card_click = True
 
+    game.draw_misses_text(screen)
+    
     pygame.display.flip()
     delta_time = clock.tick(video_cfg.FPS) / 1000
 

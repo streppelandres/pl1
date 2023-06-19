@@ -39,6 +39,10 @@ def on_click_card_collider(screen, cards: list[Card], game: Game):
     for card in cards:
         if card.rect.collidepoint(mouse_pos): #and not card.disabled:
             print(f'Card {card.number} clicked!')
+            
+            if id(card) == game.last_card_id:
+                print(f'Clicking the same card...')
+                return
 
             if card.disabled:
                 print('The clicked card is disabled')
@@ -52,15 +56,17 @@ def on_click_card_collider(screen, cards: list[Card], game: Game):
                 return
 
             last_card = get_card_by_id(cards, game.last_card_id)
-            
             if last_card.number == card.number:
                 print('Good! Same cards clicked, they are inactive')
                 last_card.set_inactive(screen)
                 card.set_inactive(screen)
             else:
                 print('Bad! The cards are differents')
+                game.miss_count += 1
+                game.enable_card_click = False
                 # FIXME: Find a better solution for these cards param
-                pygame.time.set_timer(pygame.event.Event(game.SET_FACE_DOWN_CARDS_EVENT, cards=[card, last_card]), 3000)
+                pygame.time.set_timer(pygame.event.Event(game.SET_FACE_DOWN_CARDS_EVENT, cards=[card, last_card]), 2000)
+                
             
             game.last_card_id = None
 
