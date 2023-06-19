@@ -9,8 +9,7 @@ from entities.game import Game
 def create_cards() -> list[Card]:
     card_width = video_cfg.WIDTH // (gameplay_cfg.NUMBER_OF_CARDS // 2)
     card_height = video_cfg.HEIGHT // (gameplay_cfg.NUMBER_OF_CARDS // 2)
-    cards = []
-    duplicated_cards = []
+    cards, duplicated_cards = [], []
 
     for i in range(0, gameplay_cfg.NUMBER_OF_CARDS):
         while True:
@@ -41,7 +40,7 @@ def on_click_card_collider(screen, cards: list[Card], game: Game):
             print(f'Card {card.number} clicked!')
             
             if id(card) == game.last_card_id:
-                print(f'Clicking the same card...')
+                print('Clicking the same card...')
                 return
 
             if card.disabled:
@@ -57,15 +56,16 @@ def on_click_card_collider(screen, cards: list[Card], game: Game):
 
             last_card = get_card_by_id(cards, game.last_card_id)
             if last_card.number == card.number:
-                print('Good! Same cards clicked, they are inactive')
-                last_card.set_inactive(screen)
-                card.set_inactive(screen)
+                print('Good! Same cards clicked, they are inactive now')
+                game.enable_card_click = False
+                # FIXME: Find a better solution for these cards param
+                pygame.time.set_timer(pygame.event.Event(game.SAME_CARDS_CLICKED, cards=[card, last_card]), gameplay_cfg.SAME_CARDS_TIME)
             else:
                 print('Bad! The cards are differents')
                 game.miss_count += 1
                 game.enable_card_click = False
                 # FIXME: Find a better solution for these cards param
-                pygame.time.set_timer(pygame.event.Event(game.SET_FACE_DOWN_CARDS_EVENT, cards=[card, last_card]), 2000)
+                pygame.time.set_timer(pygame.event.Event(game.DIFFERENT_CARDS_CLICKED, cards=[card, last_card]), gameplay_cfg.DIFFERENT_CARDS_TIME)
                 
             
             game.last_card_id = None

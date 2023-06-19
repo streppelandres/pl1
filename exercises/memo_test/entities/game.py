@@ -6,9 +6,11 @@ class Game:
     def __init__(self) -> None:
         self.last_card_id = None
         self.attempts_left = gameplay_cfg.MAX_ATTEMPTS
-        self.SET_FACE_DOWN_CARDS_EVENT = pygame.USEREVENT + 1
+        self.DIFFERENT_CARDS_CLICKED = pygame.USEREVENT + 1
+        self.SAME_CARDS_CLICKED = pygame.USEREVENT + 2
         self.enable_card_click = True
         self.miss_count = 0
+        self.discovered_cards = 0
     
     def draw_misses_text(self, screen):
         font = pygame.font.Font(None, 32)

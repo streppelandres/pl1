@@ -23,13 +23,17 @@ while is_running:
             is_running = False
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and game.enable_card_click:
             card_helper.on_click_card_collider(screen, cards, game)
-        elif event.type == game.SET_FACE_DOWN_CARDS_EVENT:
+        elif event.type == game.SAME_CARDS_CLICKED:
+            [card.set_inactive(screen) for card in event.cards]
+            pygame.time.set_timer(game.SAME_CARDS_CLICKED, 0)
+            game.enable_card_click = True
+        elif event.type == game.DIFFERENT_CARDS_CLICKED:
             [card.face_toogle(screen, False) for card in event.cards]
-            pygame.time.set_timer(game.SET_FACE_DOWN_CARDS_EVENT, 0)
+            pygame.time.set_timer(game.DIFFERENT_CARDS_CLICKED, 0)
             game.enable_card_click = True
 
     game.draw_misses_text(screen)
-    
+
     pygame.display.flip()
     delta_time = clock.tick(video_cfg.FPS) / 1000
 
