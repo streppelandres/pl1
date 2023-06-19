@@ -1,5 +1,5 @@
 import pygame
-from config import game_cfg, video_cfg
+from config import game_cfg, video_cfg, gameplay_cfg
 from entities import card_helper, board_helper
 from entities.game import Game
 
@@ -27,11 +27,17 @@ while is_running:
             [card.set_inactive(screen) for card in event.cards]
             pygame.time.set_timer(game.SAME_CARDS_CLICKED, 0)
             game.enable_card_click = True
+            game.discovered_cards += 1
         elif event.type == game.DIFFERENT_CARDS_CLICKED:
             [card.face_toogle(screen, False) for card in event.cards]
             pygame.time.set_timer(game.DIFFERENT_CARDS_CLICKED, 0)
             game.enable_card_click = True
 
+    if game.discovered_cards == gameplay_cfg.NUMBER_OF_CARDS:
+        # TODO: Make a win screen or some succes message
+        print(f'All cards discovered in {game.miss_count} tries, ending game!')
+        is_running = False
+    
     game.draw_misses_text(screen)
 
     pygame.display.flip()
