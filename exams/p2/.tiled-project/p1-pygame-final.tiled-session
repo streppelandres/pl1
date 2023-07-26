@@ -1,0 +1,48 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "level_data/level_0.tmx": {
+            "scale": 5.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 615,
+                "y": 214.36363636363637
+            }
+        },
+        "level_data/level_1.tmx": {
+            "scale": 2,
+            "selectedLayer": 15,
+            "viewCenter": {
+                "x": 365.25,
+                "y": 120
+            }
+        }
+    },
+    "last.exportedFilePath": "E:/git/pl1-pygame-final/levels/1",
+    "last.imagePath": "E:/git/pl1-pygame-final/assets/gfx",
+    "map.height": 16,
+    "map.lastUsedExportFilter": "CSV files (*.csv)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 32,
+    "openFiles": [
+    ],
+    "project": "p1-pygame-final.tiled-project",
+    "recentFiles": [
+        "level_data/level_0.tmx"
+    ],
+    "resizeMap.removeObjects": false,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
